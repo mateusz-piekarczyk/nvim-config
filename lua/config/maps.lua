@@ -11,3 +11,11 @@ vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, { desc = "Rename Symbol"})
 vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "Code Action"})
 vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, { desc = "Previous Diagnostic"})
 vim.keymap.set("n", "]d", vim.diagnostic.goto_next, { desc = "Next Diagnostic"})
+
+vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, { desc = "open float"})
+
+local opts = { noremap = true, silent = true }
+vim.keymap.set('n', '<C-h>', '<C-w>h', opts)
+vim.keymap.set('n', '<C-j>', '<C-w>j', opts)
+vim.keymap.set('n', '<C-k>', '<C-w>k', opts)
+vim.keymap.set('n', '<C-l>', '<C-w>l', opts)
