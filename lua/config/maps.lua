@@ -9,10 +9,14 @@ vim.keymap.set("n", "gr", vim.lsp.buf.references, { desc = "Find References"})
 vim.keymap.set("n", "K", vim.lsp.buf.hover, { desc = "Hover Documentation"})
 vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, { desc = "Rename Symbol"})
 vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "Code Action"})
+
 vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, { desc = "Previous Diagnostic"})
 vim.keymap.set("n", "]d", vim.diagnostic.goto_next, { desc = "Next Diagnostic"})
+vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, { desc = "Open Float"})
 
-vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, { desc = "open float"})
+vim.keymap.set('n', '<leader>o', function()
+  require('oil').open(vim.fn.getcwd())
+end, { desc = 'Explorer (Oil)' })
 
 local opts = { noremap = true, silent = true }
 vim.keymap.set('n', '<C-h>', '<C-w>h', opts)

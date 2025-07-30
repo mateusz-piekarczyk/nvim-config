@@ -1,4 +1,4 @@
-return { 
+return {
   -- Mason for LSP management
   {
     'williamboman/mason.nvim',
