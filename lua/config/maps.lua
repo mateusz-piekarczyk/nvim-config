@@ -13,10 +13,7 @@ vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "Code Action
 vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, { desc = "Previous Diagnostic"})
 vim.keymap.set("n", "]d", vim.diagnostic.goto_next, { desc = "Next Diagnostic"})
 vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, { desc = "Open Float"})
-
-vim.keymap.set('n', '<leader>o', function()
-  require('oil').open(vim.fn.getcwd())
-end, { desc = 'Explorer (Oil)' })
+vim.keymap.set("n", "<leader>o", "<CMD>Oil<CR>", { desc = "Explorer (Oil)" })
 
 local opts = { noremap = true, silent = true }
 vim.keymap.set('n', '<C-h>', '<C-w>h', opts)

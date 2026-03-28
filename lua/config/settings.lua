@@ -14,3 +14,4 @@ vim.g.maplocalleader = " "
 vim.schedule(function()
 	vim.opt.clipboard = "unnamedplus"
 end)
+
