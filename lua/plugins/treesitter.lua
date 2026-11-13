@@ -1,21 +1,65 @@
 return {
-  "nvim-treesitter/nvim-treesitter",
-  build = ":TSUpdate",
-  lazy = false,
-  dependencies = {
-    "nvim-treesitter/nvim-treesitter-textobjects",
+  {
+    "nvim-treesitter/nvim-treesitter",
+    branch = "main",
+    build = ":TSUpdate",
     lazy = false,
-  },
-  opts = {
-    highlight = {
-      enable = true,
-      additional_vim_regex_highlighting = false,
-    },
+    config = function()
+      require("nvim-treesitter").install({
+        "ruby", "lua", "vim", "vimdoc", "query", "markdown", "markdown_inline",
+        "bash", "json", "yaml", "html", "javascript", "css", "sql", "embedded_template",
+      })
 
-    textobjects = {
-      move = {
-        enable = true,
-        set_jumps = true, -- whether to set jumps in the jumplist
+      -- main branch doesn't enable highlighting by itself
+      vim.api.nvim_create_autocmd("FileType", {
+        callback = function(ev)
+          pcall(vim.treesitter.start, ev.buf)
+        end,
+      })
+    end,
+  },
+  {
+    "nvim-treesitter/nvim-treesitter-textobjects",
+    branch = "main",
+    lazy = false,
+    dependencies = { "nvim-treesitter/nvim-treesitter" },
+    config = function()
+      local select = require("nvim-treesitter-textobjects.select")
+      local move = require("nvim-treesitter-textobjects.move")
+
+      require("nvim-treesitter-textobjects").setup({
+        select = {
+          lookahead = true,
+        },
+        move = {
+          set_jumps = true,
+        },
+      })
+
+      -- Select keymaps
+      local select_maps = {
+        ["af"] = "@function.outer",
+        ["if"] = "@function.inner",
+        ["ac"] = "@class.outer",
+        ["ic"] = "@class.inner",
+        ["ab"] = "@block.outer",
+        ["ib"] = "@block.inner",
+        ["al"] = "@loop.outer",
+        ["il"] = "@loop.inner",
+        ["a/"] = "@comment.outer",
+        ["i/"] = "@comment.outer",
+        ["aa"] = "@parameter.outer",
+        ["ia"] = "@parameter.inner",
+      }
+
+      for key, query in pairs(select_maps) do
+        vim.keymap.set({ "x", "o" }, key, function()
+          select.select_textobject(query, "textobjects")
+        end, { desc = "Select " .. query })
+      end
+
+      -- Move keymaps
+      local move_maps = {
         goto_next_start = {
           ["]m"] = "@function.outer",
           ["gj"] = "@function.outer",
@@ -44,37 +88,15 @@ return {
           ["[B"] = "@block.outer",
           ["[A"] = "@parameter.inner",
         },
-      },
-      select = {
-        enable = true,
-        lookahead = true,
-        keymaps = {
-          ["af"] = "@function.outer",
-          ["if"] = "@function.inner",
-          ["ac"] = "@class.outer",
-          ["ic"] = "@class.inner",
-          ["ab"] = "@block.outer",
-          ["ib"] = "@block.inner",
-          ["al"] = "@loop.outer",
-          ["il"] = "@loop.inner",
-          ["a/"] = "@comment.outer",
-          ["i/"] = "@comment.outer", -- no inner for comment
-          ["aa"] = "@parameter.outer", -- parameter -> argument
-          ["ia"] = "@parameter.inner",
-        },
-      },
-      lsp_interop = {
-        enable = true,
-        border = "none",
-        peek_definition_code = {
-          ["<leader>df"] = "@function.outer",
-          ["<leader>dc"] = "@class.outer",
-        },
-      },
-    },
-  },
-  config = function(_, opts)
-    require("nvim-treesitter.configs").setup(opts)
-  end,
-}
+      }
 
+      for method, maps in pairs(move_maps) do
+        for key, query in pairs(maps) do
+          vim.keymap.set({ "n", "x", "o" }, key, function()
+            move[method](query, "textobjects")
+          end, { desc = method .. " " .. query })
+        end
+      end
+    end,
+  },
+}

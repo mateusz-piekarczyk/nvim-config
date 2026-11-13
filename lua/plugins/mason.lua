@@ -1,7 +1,7 @@
 return {
   -- Mason for LSP management
   {
-    'williamboman/mason.nvim',
+    'mason-org/mason.nvim',
     config = function()
       require('mason').setup()
     end
@@ -9,7 +9,7 @@ return {
 
   -- Mason LSP installer (install LSP servers)
   {
-    'williamboman/mason-lspconfig.nvim',
+    'mason-org/mason-lspconfig.nvim',
     config = function()
       require('mason-lspconfig').setup({
         ensure_installed = { 'lua_ls' },  -- Automatically install Lua LSP
